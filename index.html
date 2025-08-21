@@ -614,34 +614,6 @@
             <div class="card">
                 <h2>Comprehensive Coworking Space Comparison</h2>
                 <p><strong>Important:</strong> All prices shown are for <span class="desk-type desk-dedicated">DEDICATED DESKS</span> unless otherwise noted. Many spaces also offer cheaper <span class="desk-type desk-hot">HOT DESK</span> options.</p>
-                
-                <!-- Scoring Rubric -->
-                <div style="background: var(--pe-light-gray); padding: 1rem; margin: 1rem 0; border-radius: 8px;">
-                    <h3 style="margin-bottom: 0.5rem;">Scoring Rubric</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div>
-                            <h4 style="color: var(--pe-blue); margin-bottom: 0.5rem;">Tech Community Score</h4>
-                            <div style="font-size: 0.9rem;">
-                                <div>⭐⭐⭐⭐⭐ = Primarily tech/software organizations</div>
-                                <div>⭐⭐⭐⭐ = Strong tech presence (40%+)</div>
-                                <div>⭐⭐⭐ = Moderate tech presence (20-40%)</div>
-                                <div>⭐⭐ = Some tech presence (10-20%)</div>
-                                <div>⭐ = Minimal tech presence (<10%)</div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--pe-blue); margin-bottom: 0.5rem;">Policy Alignment Score</h4>
-                            <div style="font-size: 0.9rem;">
-                                <div>⭐⭐⭐⭐⭐ = Policy research/advocacy focus</div>
-                                <div>⭐⭐⭐⭐ = Many policy-related orgs</div>
-                                <div>⭐⭐⭐ = Some policy organizations</div>
-                                <div>⭐⭐ = Occasional policy work</div>
-                                <div>⭐ = No policy focus</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- Sub-tabs for Table and Map views -->
                 <div style="display: flex; gap: 0.5rem; margin: 1.5rem 0; border-bottom: 2px solid var(--pe-light-gray);">
                     <button class="view-toggle active" onclick="showComparisonView('table')" id="table-view-btn" style="padding: 0.75rem 1.5rem; background: var(--pe-white); border: none; cursor: pointer; font-weight: 500; color: var(--pe-blue); border-bottom: 3px solid var(--pe-blue); margin-bottom: -2px;">Table View</button>
@@ -900,8 +872,8 @@
             </div>
 
             <div class="card">
-                <h2>Member Organizations & Partnership Opportunities</h2>
-                <p>Open Gov Hub hosts 40+ organizations. Here are key members with strong PolicyEngine alignment:</p>
+                <h2>Civic Tech & GovTech Organizations at Open Gov Hub</h2>
+                <p>Open Gov Hub hosts 50-80 organizations focused on transparency, accountability, and civic engagement. Key tech-focused members include:</p>
                 
                 <div class="org-grid">
                     <div class="org-card">
@@ -1743,38 +1715,62 @@
             // Add Open Gov Hub
             L.marker([spaceData.openGovHub.lat, spaceData.openGovHub.lng], { icon: openGovHubIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.openGovHub));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.openGovHub);
+                });
             
             // Add The Yard
             L.marker([spaceData.yard.lat, spaceData.yard.lng], { icon: yardIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.yard));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.yard);
+                });
             
             // Add WeWork locations
             L.marker([spaceData.wework80M.lat, spaceData.wework80M.lng], { icon: weworkIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.wework80M));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.wework80M);
+                });
             
             L.marker([spaceData.wework700K.lat, spaceData.wework700K.lng], { icon: weworkIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.wework700K));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.wework700K);
+                });
             
             L.marker([spaceData.wework200Mass.lat, spaceData.wework200Mass.lng], { icon: weworkIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.wework200Mass));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.wework200Mass);
+                });
             
             L.marker([spaceData.weworkMidtown.lat, spaceData.weworkMidtown.lng], { icon: weworkIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.weworkMidtown));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.weworkMidtown);
+                });
             
             L.marker([spaceData.weworkRhodeIsland.lat, spaceData.weworkRhodeIsland.lng], { icon: weworkIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.weworkRhodeIsland));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.weworkRhodeIsland);
+                });
             
             // Add Spaces DC
             L.marker([spaceData.spaces.lat, spaceData.spaces.lng], { icon: spacesIcon })
                 .addTo(comparisonMap)
-                .on('click', () => showSpaceDetails(spaceData.spaces));
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.spaces);
+                });
             
             // Add team member locations with star icons
             L.marker([38.8867, -77.0954], { icon: teamIcon })
