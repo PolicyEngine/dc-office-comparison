@@ -615,6 +615,33 @@
                 <h2>Comprehensive Coworking Space Comparison</h2>
                 <p><strong>Important:</strong> All prices shown are for <span class="desk-type desk-dedicated">DEDICATED DESKS</span> unless otherwise noted. Many spaces also offer cheaper <span class="desk-type desk-hot">HOT DESK</span> options.</p>
                 
+                <!-- Scoring Rubric -->
+                <div style="background: var(--pe-light-gray); padding: 1rem; margin: 1rem 0; border-radius: 8px;">
+                    <h3 style="margin-bottom: 0.5rem;">Scoring Rubric</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <h4 style="color: var(--pe-blue); margin-bottom: 0.5rem;">Tech Community Score</h4>
+                            <div style="font-size: 0.9rem;">
+                                <div>⭐⭐⭐⭐⭐ = Primarily tech/software organizations</div>
+                                <div>⭐⭐⭐⭐ = Strong tech presence (40%+)</div>
+                                <div>⭐⭐⭐ = Moderate tech presence (20-40%)</div>
+                                <div>⭐⭐ = Some tech presence (10-20%)</div>
+                                <div>⭐ = Minimal tech presence (<10%)</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--pe-blue); margin-bottom: 0.5rem;">Policy Alignment Score</h4>
+                            <div style="font-size: 0.9rem;">
+                                <div>⭐⭐⭐⭐⭐ = Policy research/advocacy focus</div>
+                                <div>⭐⭐⭐⭐ = Many policy-related orgs</div>
+                                <div>⭐⭐⭐ = Some policy organizations</div>
+                                <div>⭐⭐ = Occasional policy work</div>
+                                <div>⭐ = No policy focus</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Sub-tabs for Table and Map views -->
                 <div style="display: flex; gap: 0.5rem; margin: 1.5rem 0; border-bottom: 2px solid var(--pe-light-gray);">
                     <button class="view-toggle active" onclick="showComparisonView('table')" id="table-view-btn" style="padding: 0.75rem 1.5rem; background: var(--pe-white); border: none; cursor: pointer; font-weight: 500; color: var(--pe-blue); border-bottom: 3px solid var(--pe-blue); margin-bottom: -2px;">Table View</button>
@@ -630,7 +657,8 @@
                             <th>Location</th>
                             <th>3 Desks/Month</th>
                             <th>Desk Type</th>
-                            <th>Tech Score</th>
+                            <th>Tech<br><span style="font-weight: 400; font-size: 0.75rem;">(hover for details)</span></th>
+                            <th>Policy<br><span style="font-weight: 400; font-size: 0.75rem;">(hover for details)</span></th>
                             <th>From Clarendon<br><span style="font-weight: 400; font-size: 0.75rem;">(Metro)</span></th>
                             <th>From 3rd & K<br><span style="font-weight: 400; font-size: 0.75rem;">(Bike)</span></th>
                             <th>Key Features</th>
@@ -642,7 +670,8 @@
                             <td>1100 13th St NW</td>
                             <td><span class="price-badge price-high" title="$669 per desk × 3 desks">$2,007</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated</span></td>
-                            <td><span title="Gov tech, civic tech, open data organizations">Gov Tech Focus</span></td>
+                            <td><span title="Strong presence of government tech, civic tech, and open data organizations">⭐⭐⭐⭐</span></td>
+                            <td><span title="Primary focus on policy research, advocacy, and government transparency. Home to 40+ organizations working on governance.">⭐⭐⭐⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1100+13th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Orange/Silver to McPherson Square, 6 min walk">23 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1100+13th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via Pennsylvania Ave bike lane">10 min</a></td>
                             <td>40+ mission-aligned orgs, all amenities included</td>
@@ -652,7 +681,8 @@
                             <td>Capitol Riverfront</td>
                             <td><span class="price-badge price-mid" title="Estimated based on: All Access $299/person, private offices $530-800/person, industry benchmarks">~$1,350-1,800</span></td>
                             <td><span class="desk-type desk-dedicated" title="Dedicated desk pricing not publicly listed, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="General business community with startups and some tech companies">⭐⭐⭐</span></td>
+                            <td><span title="No specific policy focus">⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/80+M+St+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Transfer at L'Enfant to Green Line">30 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/80+M+St+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Via M Street to Navy Yard">15 min</a></td>
                             <td>Navy Yard, outdoor space</td>
@@ -662,7 +692,8 @@
                             <td>East End</td>
                             <td><span class="price-badge price-mid" title="Estimated based on: All Access $299/person, private offices $530-800/person, industry benchmarks">~$1,350-1,800</span></td>
                             <td><span class="desk-type desk-dedicated" title="Dedicated desk pricing not publicly listed, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="General business community with startups and some tech companies">⭐⭐⭐</span></td>
+                            <td><span title="Near Union Station and government offices but no specific policy focus">⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/200+Massachusetts+Ave+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="To Metro Center, transfer to Red Line">26 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/200+Massachusetts+Ave+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Via F Street to Union Station area">10 min</a></td>
                             <td>Near Union Station</td>
@@ -672,7 +703,8 @@
                             <td>Downtown</td>
                             <td><span class="price-badge price-mid" title="Estimated based on: All Access $299/person, private offices $530-800/person, industry benchmarks">~$1,350-1,800</span></td>
                             <td><span class="desk-type desk-dedicated" title="Dedicated desk pricing not publicly listed, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="K Street business district with consultants and some tech">⭐⭐⭐</span></td>
+                            <td><span title="K Street has many lobbying firms and policy consultants">⭐⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/700+K+St+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Direct to McPherson Square, 3 min walk">20 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/700+K+St+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Direct route on K Street bike lane">4 min</a></td>
                             <td>K Street business district</td>
@@ -682,7 +714,8 @@
                             <td>1100 15th St NW</td>
                             <td><span class="price-badge price-mid" title="Estimated based on: All Access $299/person, private offices $530-800/person, industry benchmarks">~$1,350-1,800</span></td>
                             <td><span class="desk-type desk-dedicated" title="Dedicated desk pricing not publicly listed, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="General business community with startups and some tech companies">⭐⭐⭐</span></td>
+                            <td><span title="No specific policy focus">⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1100+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="To McPherson Square, 5 min walk">20 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1100+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via 15th St protected bike lane">12 min</a></td>
                             <td>Wellness rooms</td>
@@ -692,7 +725,8 @@
                             <td>Dupont Circle</td>
                             <td><span class="price-badge price-mid" title="Estimated based on: All Access $299/person, private offices $530-800/person, industry benchmarks">~$1,350-1,800</span></td>
                             <td><span class="desk-type desk-dedicated" title="Dedicated desk pricing not publicly listed, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="Dupont Circle area with mixed business and some tech">⭐⭐⭐</span></td>
+                            <td><span title="Dupont Circle has many think tanks and NGOs nearby">⭐⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1701+Rhode+Island+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="To Dupont Circle, 5 min walk">22 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1701+Rhode+Island+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="Via Massachusetts Ave">14 min</a></td>
                             <td>Rooftop terrace</td>
@@ -702,7 +736,8 @@
                             <td>700 Pennsylvania Ave SE</td>
                             <td><span class="price-badge price-mid">$1,485</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated</span></td>
-                            <td><span title="Professional community">Professional</span></td>
+                            <td><span title="Professional services environment with some tech-enabled businesses">⭐⭐</span></td>
+                            <td><span title="Capitol Hill location near Congress but space itself has no policy focus">⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Transfer at L'Enfant Plaza to Blue/Orange">25 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Via Pennsylvania Ave bike lane">12 min</a></td>
                             <td>Capitol Hill, tech-enabled</td>
@@ -712,7 +747,8 @@
                             <td>1015 15th St NW</td>
                             <td><span class="price-badge price-mid">$900-1,200</span></td>
                             <td><span class="desk-type desk-dedicated" title="Pricing varies, requires direct inquiry">Dedicated</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="General coworking with mixed business types">⭐⭐</span></td>
+                            <td><span title="Near White House but no specific policy focus">⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1015+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="To McPherson Square, 5 min walk">20 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1015+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via 15th St protected bike lane">12 min</a></td>
                             <td>Near White House</td>
@@ -722,7 +758,8 @@
                             <td>1201 Connecticut Ave</td>
                             <td><span class="price-badge price-mid">$897+</span></td>
                             <td><span class="desk-type desk-hot">Hot Desk</span></td>
-                            <td><span title="Mixed business community">General Business</span></td>
+                            <td><span title="Professional services and consultants with limited tech focus">⭐⭐</span></td>
+                            <td><span title="Some consultants but no specific policy focus">⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1201+Connecticut+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="To Farragut North">21 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1201+Connecticut+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link">11 min</a></td>
                             <td>200+ locations</td>
@@ -732,7 +769,8 @@
                             <td>Capitol Hill (5 locations)</td>
                             <td><span class="price-badge price-low">$300-600</span></td>
                             <td><span class="desk-type desk-hot">Hot Desk</span></td>
-                            <td><span title="Various professionals">Mixed</span></td>
+                            <td><span title="Budget coworking with freelancers and small businesses. Minimal tech focus.">⭐</span></td>
+                            <td><span title="No policy focus">⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/Capitol+Hill,+Washington,+DC" target="_blank" class="transit-link">25 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/Capitol+Hill,+Washington,+DC" target="_blank" class="transit-link">10 min</a></td>
                             <td>Budget option</td>
