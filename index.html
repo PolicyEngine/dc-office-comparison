@@ -624,35 +624,35 @@
                         <tr>
                             <td>WeWork 80 M St SE</td>
                             <td>Capitol Riverfront</td>
-                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
                             <td>Navy Yard, outdoor space, parking</td>
                         </tr>
                         <tr>
                             <td>WeWork 200 Mass Ave NW</td>
                             <td>East End</td>
-                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
                             <td>Near Union Station, govt proximity</td>
                         </tr>
                         <tr>
                             <td>WeWork 700 K St NW</td>
                             <td>Downtown</td>
-                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
                             <td>K Street business district</td>
                         </tr>
                         <tr>
                             <td>WeWork Midtown Center</td>
                             <td>1100 15th St NW</td>
-                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
                             <td>Wellness rooms, outdoor spaces</td>
                         </tr>
                         <tr>
                             <td>WeWork 1701 Rhode Island</td>
                             <td>Dupont Circle</td>
-                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
                             <td>Rooftop terrace, cafes nearby</td>
                         </tr>
@@ -701,7 +701,7 @@
                     </tbody>
                 </table>
                 <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--pe-dark-gray);">
-                    * WeWork dedicated desk pricing requires direct inquiry and varies by location. Prices shown are estimates based on market averages.
+                    * WeWork dedicated desk pricing is not publicly listed and requires direct inquiry. WeWork All Access (hot desking at any location) is $299/month per person. Private offices start at $530+/month for 1 person. Dedicated desk pricing typically falls between these options but varies significantly by location and availability.
                 </p>
             </div>
 
@@ -1144,12 +1144,12 @@
                                 <td><strong class="included">$1,950</strong></td>
                             </tr>
                             <tr>
-                                <td>WeWork (avg)</td>
-                                <td>$1,200</td>
-                                <td class="extra-cost">+$350</td>
-                                <td class="extra-cost">+$600</td>
-                                <td class="extra-cost">+$50</td>
-                                <td><strong class="extra-cost">$2,200</strong></td>
+                                <td>WeWork (if dedicated available)</td>
+                                <td>Unknown*</td>
+                                <td class="extra-cost">+$350 (est.)</td>
+                                <td class="extra-cost">+$600 (est.)</td>
+                                <td class="extra-cost">+$50 (est.)</td>
+                                <td><strong class="extra-cost">Unknown</strong></td>
                             </tr>
                             <tr>
                                 <td>The Yard DC</td>
@@ -1169,10 +1169,13 @@
                             </tr>
                         </tbody>
                     </table>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        * WeWork does not publicly list dedicated desk pricing. Their All Access (hot desk) plan is $299/person/month. Private offices start at $530+/person/month. Dedicated desks, if available, would likely fall between these prices.
+                    </p>
                 </div>
                 
                 <p style="margin-top: 2rem; font-size: 1.1rem; padding: 1rem; background: var(--pe-blue-light); border-radius: 8px;">
-                    <strong>Key Finding:</strong> When accounting for realistic usage of meeting rooms and media facilities, Open Gov Hub becomes the most cost-effective option despite having the highest base price.
+                    <strong>Key Finding:</strong> Open Gov Hub's all-inclusive pricing provides cost certainty. Other spaces often have significant hidden costs for essential services like meeting rooms and media production.
                 </p>
             </div>
         </div>
@@ -1221,7 +1224,7 @@
                         <tr>
                             <td><strong>True Monthly Cost</strong></td>
                             <td class="included">$1,950</td>
-                            <td>$2,200+</td>
+                            <td>Unknown**</td>
                             <td>$2,165+</td>
                             <td>$300-600</td>
                         </tr>
@@ -1407,102 +1410,94 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Custom icons
-        const recommendedIcon = L.divIcon({
-            html: '<div style="background: #39C6C0; color: white; padding: 8px; border-radius: 50%; font-weight: bold; text-align: center; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">★</div>',
+        // Custom icons for offices
+        const openGovHubIcon = L.divIcon({
+            html: '<div style="background: #39C6C0; color: white; padding: 8px; border-radius: 50%; font-weight: bold; text-align: center; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.4); border: 2px solid white;">OGH</div>',
             iconSize: [30, 30],
             className: 'custom-div-icon'
         });
 
-        const regularIcon = L.divIcon({
-            html: '<div style="background: #2C6496; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">●</div>',
+        const weworkIcon = L.divIcon({
+            html: '<div style="background: #FF6900; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 12px; font-weight: bold;">WW</div>',
+            iconSize: [28, 28],
+            className: 'custom-div-icon'
+        });
+
+        const yardIcon = L.divIcon({
+            html: '<div style="background: #4CAF50; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 12px; font-weight: bold;">YD</div>',
+            iconSize: [28, 28],
+            className: 'custom-div-icon'
+        });
+
+        const spacesIcon = L.divIcon({
+            html: '<div style="background: #9C27B0; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 12px; font-weight: bold;">SP</div>',
+            iconSize: [28, 28],
+            className: 'custom-div-icon'
+        });
+
+        const teamIcon = L.divIcon({
+            html: '<div style="background: #2C6496; color: #FFD700; padding: 8px; border-radius: 50%; text-align: center; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.5); border: 2px solid #FFD700; font-size: 20px;">★</div>',
+            iconSize: [35, 35],
+            className: 'custom-div-icon'
+        });
+
+        const govIcon = L.divIcon({
+            html: '<div style="background: #17354F; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 18px;">🏛</div>',
             iconSize: [25, 25],
             className: 'custom-div-icon'
         });
 
-        // Add markers for coworking spaces
-        const locations = [
-            {
-                name: "Open Gov Hub",
-                lat: 38.9047,
-                lng: -77.0322,
-                price: "$1,950/mo (all inclusive)",
-                recommended: true,
-                description: "40+ mission-aligned organizations"
-            },
-            {
-                name: "The Yard DC",
-                lat: 38.8816,
-                lng: -76.9969,
-                price: "$1,485/mo",
-                recommended: true,
-                description: "Capitol Hill, tech-enabled"
-            },
-            {
-                name: "WeWork 80 M St SE",
-                lat: 38.8766,
-                lng: -77.0059,
-                price: "~$1,200/mo",
-                recommended: false,
-                description: "Navy Yard, outdoor space"
-            },
-            {
-                name: "WeWork 700 K St NW",
-                lat: 38.9022,
-                lng: -77.0211,
-                price: "~$1,200/mo",
-                recommended: false,
-                description: "K Street business district"
-            },
-            {
-                name: "WeWork 200 Mass Ave NW",
-                lat: 38.8977,
-                lng: -77.0091,
-                price: "~$1,200/mo",
-                recommended: false,
-                description: "Near Union Station"
-            },
-            {
-                name: "Spaces DC",
-                lat: 38.9005,
-                lng: -77.0339,
-                price: "$900-1,200/mo",
-                recommended: false,
-                description: "Near White House"
-            }
+        // Add Open Gov Hub
+        L.marker([38.9047, -77.0322], { icon: openGovHubIcon })
+            .addTo(map)
+            .bindPopup("<strong>Open Gov Hub</strong><br>$1,950/mo (all inclusive)<br><em>40+ mission-aligned organizations</em>");
+
+        // Add The Yard
+        L.marker([38.8816, -76.9969], { icon: yardIcon })
+            .addTo(map)
+            .bindPopup("<strong>The Yard DC</strong><br>$1,485/mo<br><em>Capitol Hill, tech-enabled</em>");
+
+        // Add WeWork locations
+        const weworkLocations = [
+            { name: "WeWork 80 M St SE", lat: 38.8766, lng: -77.0059, desc: "Navy Yard, outdoor space" },
+            { name: "WeWork 700 K St NW", lat: 38.9022, lng: -77.0211, desc: "K Street business district" },
+            { name: "WeWork 200 Mass Ave NW", lat: 38.8977, lng: -77.0091, desc: "Near Union Station" },
+            { name: "WeWork Midtown Center", lat: 38.9002, lng: -77.0327, desc: "1100 15th St NW" },
+            { name: "WeWork 1701 Rhode Island", lat: 38.9074, lng: -77.0398, desc: "Dupont Circle" }
         ];
 
-        locations.forEach(location => {
-            const marker = L.marker(
-                [location.lat, location.lng],
-                { icon: location.recommended ? recommendedIcon : regularIcon }
-            ).addTo(map);
-            
-            marker.bindPopup(`
-                <strong>${location.name}</strong><br>
-                ${location.price}<br>
-                <em>${location.description}</em>
-            `);
+        weworkLocations.forEach(location => {
+            L.marker([location.lat, location.lng], { icon: weworkIcon })
+                .addTo(map)
+                .bindPopup(`<strong>${location.name}</strong><br>Pricing: Contact for quote<br><em>${location.desc}</em>`);
         });
 
-        // Add reference points
-        L.marker([38.8899, -77.0091])
+        // Add Spaces DC
+        L.marker([38.9005, -77.0339], { icon: spacesIcon })
+            .addTo(map)
+            .bindPopup("<strong>Spaces DC</strong><br>$900-1,200/mo<br><em>Near White House</em>");
+
+        // Add team member locations with star icons
+        L.marker([38.8867, -77.0954], { icon: teamIcon })
+            .addTo(map)
+            .bindPopup("<strong>Team Location: Clarendon</strong><br>Arlington, VA<br><em>Metro: Orange/Silver Lines</em>");
+            
+        L.marker([38.9024, -77.0156], { icon: teamIcon })
+            .addTo(map)
+            .bindPopup("<strong>Team Location: 3rd & K NW</strong><br>Washington, DC<br><em>Bike commute preferred</em>");
+
+        // Add government landmarks
+        L.marker([38.8899, -77.0091], { icon: govIcon })
             .addTo(map)
             .bindPopup("<strong>U.S. Capitol</strong>");
             
-        L.marker([38.8977, -77.0365])
+        L.marker([38.8977, -77.0365], { icon: govIcon })
             .addTo(map)
             .bindPopup("<strong>White House</strong>");
             
-        // Add Clarendon marker
-        L.marker([38.8867, -77.0954])
+        L.marker([38.8949, -77.0267], { icon: govIcon })
             .addTo(map)
-            .bindPopup("<strong>Clarendon Metro</strong><br>Team member location");
-            
-        // Add 3rd & K NW marker
-        L.marker([38.9024, -77.0156])
-            .addTo(map)
-            .bindPopup("<strong>3rd & K Street NW</strong><br>Team member location");
+            .bindPopup("<strong>U.S. Treasury</strong>");
 
         // Price comparison chart
         function initPriceChart() {
@@ -1513,25 +1508,18 @@
                     data: {
                         labels: [
                             'Cove (Hot Desk)',
+                            'WeWork All Access (Hot)',
                             'Industrious (Hot)',
                             'Spaces DC',
-                            'WeWork (Various)',
                             'The Yard DC',
-                            'Open Gov Hub*'
+                            'Open Gov Hub'
                         ],
                         datasets: [
                             {
-                                label: 'Base Monthly Cost (3 Desks)',
-                                data: [450, 897, 1050, 1200, 1485, 1950],
+                                label: 'Monthly Cost (3 Desks)',
+                                data: [450, 897, 897, 1050, 1485, 1950],
                                 backgroundColor: '#D8E6F3',
                                 borderColor: '#2C6496',
-                                borderWidth: 2
-                            },
-                            {
-                                label: 'True Cost with Extras',
-                                data: [650, 1200, 1990, 2200, 2165, 1950],
-                                backgroundColor: '#39C6C0',
-                                borderColor: '#227773',
                                 borderWidth: 2
                             }
                         ]
