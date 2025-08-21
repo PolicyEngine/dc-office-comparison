@@ -459,6 +459,39 @@
             margin: 2rem 0;
         }
         
+        /* Travel time links */
+        .transit-link {
+            color: var(--pe-blue);
+            text-decoration: none;
+            position: relative;
+            font-weight: 500;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .transit-link:hover {
+            background: var(--pe-teal-light);
+            text-decoration: none;
+        }
+        
+        .transit-link[title]:hover:after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pe-darkest-blue);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            z-index: 1000;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .nav-tabs {
@@ -610,6 +643,8 @@
                             <th>Location</th>
                             <th>3 Desks/Month</th>
                             <th>Desk Type</th>
+                            <th>From Clarendon<br><span style="font-weight: 400; font-size: 0.75rem;">(Metro)</span></th>
+                            <th>From 3rd & K<br><span style="font-weight: 400; font-size: 0.75rem;">(Bike)</span></th>
                             <th>Key Features</th>
                         </tr>
                     </thead>
@@ -619,6 +654,8 @@
                             <td>1100 13th St NW</td>
                             <td><span class="price-badge price-high">$1,950</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated</span></td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/1100+13th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Orange/Silver to McPherson Square, 6 min walk">23 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1100+13th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via Pennsylvania Ave bike lane">10 min</a></td>
                             <td>40+ mission-aligned orgs, all amenities included</td>
                         </tr>
                         <tr>
@@ -626,20 +663,26 @@
                             <td>Capitol Riverfront</td>
                             <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
-                            <td>Navy Yard, outdoor space, parking</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/80+M+St+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Transfer at L'Enfant to Green Line">30 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/80+M+St+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Via M Street to Navy Yard">15 min</a></td>
+                            <td>Navy Yard, outdoor space</td>
                         </tr>
                         <tr>
                             <td>WeWork 200 Mass Ave NW</td>
                             <td>East End</td>
                             <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
-                            <td>Near Union Station, govt proximity</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/200+Massachusetts+Ave+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="To Metro Center, transfer to Red Line">26 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/200+Massachusetts+Ave+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Via F Street to Union Station area">10 min</a></td>
+                            <td>Near Union Station</td>
                         </tr>
                         <tr>
                             <td>WeWork 700 K St NW</td>
                             <td>Downtown</td>
                             <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/700+K+St+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Direct to McPherson Square, 3 min walk">20 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/700+K+St+NW,+Washington,+DC+20001" target="_blank" class="transit-link" title="Direct route on K Street bike lane">4 min</a></td>
                             <td>K Street business district</td>
                         </tr>
                         <tr>
@@ -647,42 +690,54 @@
                             <td>1100 15th St NW</td>
                             <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
-                            <td>Wellness rooms, outdoor spaces</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/1100+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="To McPherson Square, 5 min walk">20 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1100+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via 15th St protected bike lane">12 min</a></td>
+                            <td>Wellness rooms</td>
                         </tr>
                         <tr>
                             <td>WeWork 1701 Rhode Island</td>
                             <td>Dupont Circle</td>
                             <td><span class="price-badge price-high">Contact for pricing</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
-                            <td>Rooftop terrace, cafes nearby</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/1701+Rhode+Island+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="To Dupont Circle, 5 min walk">22 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1701+Rhode+Island+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="Via Massachusetts Ave">14 min</a></td>
+                            <td>Rooftop terrace</td>
                         </tr>
                         <tr class="recommended">
                             <td><strong>The Yard DC</strong></td>
                             <td>700 Pennsylvania Ave SE</td>
                             <td><span class="price-badge price-mid">$1,485</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated</span></td>
-                            <td>Capitol Hill, tech-enabled, rooftop</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Transfer at L'Enfant Plaza to Blue/Orange">25 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Via Pennsylvania Ave bike lane">12 min</a></td>
+                            <td>Capitol Hill, tech-enabled</td>
                         </tr>
                         <tr>
                             <td>Spaces DC</td>
                             <td>1015 15th St NW</td>
                             <td><span class="price-badge price-mid">$900-1,200</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
-                            <td>Near White House, IWG network</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/1015+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="To McPherson Square, 5 min walk">20 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1015+15th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Via 15th St protected bike lane">12 min</a></td>
+                            <td>Near White House</td>
                         </tr>
                         <tr>
-                            <td>Industrious (Multiple)</td>
-                            <td>Various locations</td>
+                            <td>Industrious</td>
+                            <td>1201 Connecticut Ave</td>
                             <td><span class="price-badge price-mid">$897+</span></td>
                             <td><span class="desk-type desk-hot">Hot Desk</span></td>
-                            <td>200+ locations, wellness focus</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/1201+Connecticut+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link" title="To Farragut North">21 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1201+Connecticut+Ave+NW,+Washington,+DC+20036" target="_blank" class="transit-link">11 min</a></td>
+                            <td>200+ locations</td>
                         </tr>
                         <tr>
                             <td>Cove</td>
                             <td>Capitol Hill (5 locations)</td>
                             <td><span class="price-badge price-low">$300-600</span></td>
                             <td><span class="desk-type desk-hot">Hot Desk</span></td>
-                            <td>Budget option, basic amenities</td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon,+Arlington,+VA/Capitol+Hill,+Washington,+DC" target="_blank" class="transit-link">25 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/Capitol+Hill,+Washington,+DC" target="_blank" class="transit-link">10 min</a></td>
+                            <td>Budget option</td>
                         </tr>
                         <tr style="opacity: 0.5;">
                             <td><strike>MakeOffices</strike></td>
