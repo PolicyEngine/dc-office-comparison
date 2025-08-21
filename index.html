@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyEngine DC Office Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PolicyEngine Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:opsz@8..144&family=Roboto:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* PolicyEngine Color Palette */
+        :root {
+            --pe-black: #000000;
+            --pe-blue: #2C6496;
+            --pe-blue-light: #D8E6F3;
+            --pe-blue-pressed: #17354F;
+            --pe-blue-hover: #1d3e5e;
+            --pe-darkest-blue: #0C1A27;
+            --pe-teal-accent: #39C6C0;
+            --pe-teal-light: #F7FDFC;
+            --pe-teal-pressed: #227773;
+            --pe-gray: #808080;
+            --pe-light-gray: #F2F2F2;
+            --pe-medium-dark-gray: #D2D2D2;
+            --pe-medium-light-gray: #BDBDBD;
+            --pe-dark-gray: #616161;
+            --pe-white: #FFFFFF;
+            --pe-dark-red: #b50d0d;
+            --header-height: 80px;
+        }
+        
+        /* PolicyEngine Typography */
+        body {
+            font-family: "Roboto Serif", serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--pe-black);
+            background: var(--pe-white);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Roboto Serif", serif;
+            font-weight: 400;
+            color: var(--pe-darkest-blue);
+        }
+        
+        .spaced-sans-serif {
+            text-transform: uppercase;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            letter-spacing: 2.4px;
+        }
+        
+        .mono-text {
+            font-family: "Roboto Mono", monospace;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--pe-blue);
+            color: var(--pe-white);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            color: var(--pe-white);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            opacity: 0.9;
+            font-size: 1.1rem;
+            color: var(--pe-white);
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            border-bottom: 2px solid var(--pe-light-gray);
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: var(--pe-white);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            color: var(--pe-dark-gray);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab.active {
+            background: var(--pe-white);
+            color: var(--pe-blue);
+            border-bottom: 3px solid var(--pe-blue);
+            margin-bottom: -2px;
+        }
+        
+        .nav-tab:hover:not(.active) {
+            background: var(--pe-blue-light);
+            color: var(--pe-blue-pressed);
+        }
+        
+        /* Content Sections */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .card {
+            background: var(--pe-white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--pe-light-gray);
+        }
+        
+        .highlight-card {
+            border-left: 4px solid var(--pe-teal-accent);
+            background: linear-gradient(to right, var(--pe-teal-light), var(--pe-white));
+        }
+        
+        h2 {
+            color: var(--pe-darkest-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: var(--pe-blue);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+        
+        /* Links */
+        a {
+            color: var(--pe-blue);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        a:hover {
+            color: var(--pe-blue-pressed);
+            text-decoration: underline;
+        }
+        
+        /* Map */
+        #map {
+            height: 500px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--pe-medium-dark-gray);
+        }
+        
+        /* Tables */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .comparison-table th {
+            background: var(--pe-blue);
+            color: var(--pe-white);
+            padding: 1rem;
+            text-align: left;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--pe-light-gray);
+        }
+        
+        .comparison-table tr:hover {
+            background: var(--pe-teal-light);
+        }
+        
+        .comparison-table tr.recommended {
+            background: var(--pe-blue-light);
+        }
+        
+        .comparison-table tr.recommended:hover {
+            background: #c5dae9;
+        }
+        
+        /* Badges */
+        .price-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            font-family: "Roboto Mono", monospace;
+        }
+        
+        .price-low {
+            background: var(--pe-teal-light);
+            color: var(--pe-teal-pressed);
+        }
+        
+        .price-mid {
+            background: var(--pe-blue-light);
+            color: var(--pe-blue-pressed);
+        }
+        
+        .price-high {
+            background: #ffebee;
+            color: var(--pe-dark-red);
+        }
+        
+        .desk-type {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+        
+        .desk-dedicated {
+            background: var(--pe-teal-accent);
+            color: var(--pe-white);
+        }
+        
+        .desk-hot {
+            background: var(--pe-medium-light-gray);
+            color: var(--pe-dark-gray);
+        }
+        
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--pe-white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border: 1px solid var(--pe-light-gray);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--pe-blue);
+            font-family: "Roboto", sans-serif;
+        }
+        
+        .stat-label {
+            color: var(--pe-dark-gray);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: "Roboto", sans-serif;
+        }
+        
+        /* Organization Cards */
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .org-card {
+            background: var(--pe-white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border: 1px solid var(--pe-light-gray);
+            transition: all 0.3s;
+        }
+        
+        .org-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: var(--pe-teal-accent);
+        }
+        
+        .org-name {
+            font-weight: bold;
+            color: var(--pe-darkest-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .org-focus {
+            color: var(--pe-dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .alignment-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            font-family: "Roboto", sans-serif;
+        }
+        
+        .alignment-strong {
+            background: var(--pe-teal-light);
+            color: var(--pe-teal-pressed);
+        }
+        
+        .alignment-moderate {
+            background: var(--pe-blue-light);
+            color: var(--pe-blue-pressed);
+        }
+        
+        .alignment-limited {
+            background: #ffebee;
+            color: var(--pe-dark-red);
+        }
+        
+        /* Feature Lists */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--pe-teal-accent);
+            font-weight: bold;
+        }
+        
+        /* Resource Links */
+        .resources-section {
+            background: var(--pe-teal-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border: 1px solid var(--pe-teal-accent);
+        }
+        
+        .resource-link {
+            display: inline-block;
+            color: var(--pe-blue);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            background: var(--pe-white);
+            border-radius: 6px;
+            border: 1px solid var(--pe-blue-light);
+            transition: all 0.3s;
+            font-family: "Roboto", sans-serif;
+        }
+        
+        .resource-link:hover {
+            background: var(--pe-blue);
+            color: var(--pe-white);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        
+        /* Transit Information */
+        .transit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .transit-card {
+            background: var(--pe-light-gray);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--pe-teal-accent);
+        }
+        
+        .transit-card h4 {
+            color: var(--pe-blue);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-family: "Roboto", sans-serif;
+        }
+        
+        .transit-time {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--pe-teal-pressed);
+            font-family: "Roboto Mono", monospace;
+        }
+        
+        .transit-details {
+            font-size: 0.9rem;
+            color: var(--pe-dark-gray);
+            margin-top: 0.5rem;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 2rem 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .nav-tab {
+                flex: 0 0 auto;
+            }
+            
+            .comparison-table {
+                font-size: 0.85rem;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+            
+            .org-grid,
+            .transit-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Extras Cost Table */
+        .extras-table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        
+        .extras-table th {
+            background: var(--pe-teal-accent);
+            color: var(--pe-white);
+            padding: 0.75rem;
+            text-align: left;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+        }
+        
+        .extras-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--pe-light-gray);
+        }
+        
+        .extras-table .included {
+            color: var(--pe-teal-pressed);
+            font-weight: bold;
+        }
+        
+        .extras-table .extra-cost {
+            color: var(--pe-dark-red);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>PolicyEngine DC Office Analysis</h1>
+            <p class="subtitle">Evaluating coworking spaces for 3 dedicated desks in Washington, DC</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
+            <button class="nav-tab" onclick="showTab('comparison')">Space Comparison</button>
+            <button class="nav-tab" onclick="showTab('opengovhub')">Open Gov Hub Deep Dive</button>
+            <button class="nav-tab" onclick="showTab('transit')">Transit & Accessibility</button>
+            <button class="nav-tab" onclick="showTab('extras')">Hidden Costs Analysis</button>
+            <button class="nav-tab" onclick="showTab('recommendation')">Recommendation</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2>Executive Summary</h2>
+                <p>PolicyEngine is evaluating office options in Washington, DC for a team of 3 people. As a tax and benefit microsimulation tool that helps policymakers understand economic policy impacts, strategic location in DC provides critical advantages for government engagement and policy influence.</p>
+                
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Coworking Spaces</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$300-$1,950</div>
+                        <div class="stat-label">Monthly Range (3 desks)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">70%</div>
+                        <div class="stat-label">OGH Org Alignment</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">20 min</div>
+                        <div class="stat-label">Avg Metro from Clarendon</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Interactive Location Map</h2>
+                <div id="map"></div>
+            </div>
+
+            <div class="card">
+                <h2>Key Decision Factors</h2>
+                <div class="grid">
+                    <div>
+                        <h3>Location & Access</h3>
+                        <ul class="feature-list">
+                            <li>Proximity to Capitol Hill and federal agencies</li>
+                            <li>Metro accessibility from team locations</li>
+                            <li>Bike-friendly for local commutes</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Community & Networking</h3>
+                        <ul class="feature-list">
+                            <li>Mission-aligned organizations</li>
+                            <li>Partnership opportunities</li>
+                            <li>Knowledge exchange potential</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Facilities & Amenities</h3>
+                        <ul class="feature-list">
+                            <li>Meeting room availability and costs</li>
+                            <li>Podcasting/media capabilities</li>
+                            <li>24/7 access for flexible work</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Tab -->
+        <div id="comparison" class="tab-content">
+            <div class="card">
+                <h2>Comprehensive Coworking Space Comparison</h2>
+                <p><strong>Important:</strong> All prices shown are for <span class="desk-type desk-dedicated">DEDICATED DESKS</span> unless otherwise noted. Many spaces also offer cheaper <span class="desk-type desk-hot">HOT DESK</span> options.</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Space</th>
+                            <th>Location</th>
+                            <th>3 Desks/Month</th>
+                            <th>Desk Type</th>
+                            <th>Key Features</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="recommended">
+                            <td><strong>Open Gov Hub</strong></td>
+                            <td>1100 13th St NW</td>
+                            <td><span class="price-badge price-high">$1,950</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated</span></td>
+                            <td>40+ mission-aligned orgs, all amenities included</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork 80 M St SE</td>
+                            <td>Capitol Riverfront</td>
+                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>Navy Yard, outdoor space, parking</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork 200 Mass Ave NW</td>
+                            <td>East End</td>
+                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>Near Union Station, govt proximity</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork 700 K St NW</td>
+                            <td>Downtown</td>
+                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>K Street business district</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork Midtown Center</td>
+                            <td>1100 15th St NW</td>
+                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>Wellness rooms, outdoor spaces</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork 1701 Rhode Island</td>
+                            <td>Dupont Circle</td>
+                            <td><span class="price-badge price-mid">~$1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>Rooftop terrace, cafes nearby</td>
+                        </tr>
+                        <tr class="recommended">
+                            <td><strong>The Yard DC</strong></td>
+                            <td>700 Pennsylvania Ave SE</td>
+                            <td><span class="price-badge price-mid">$1,485</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated</span></td>
+                            <td>Capitol Hill, tech-enabled, rooftop</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces DC</td>
+                            <td>1015 15th St NW</td>
+                            <td><span class="price-badge price-mid">$900-1,200</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated*</span></td>
+                            <td>Near White House, IWG network</td>
+                        </tr>
+                        <tr>
+                            <td>Industrious (Multiple)</td>
+                            <td>Various locations</td>
+                            <td><span class="price-badge price-mid">$897+</span></td>
+                            <td><span class="desk-type desk-hot">Hot Desk</span></td>
+                            <td>200+ locations, wellness focus</td>
+                        </tr>
+                        <tr>
+                            <td>Cove</td>
+                            <td>Capitol Hill (5 locations)</td>
+                            <td><span class="price-badge price-low">$300-600</span></td>
+                            <td><span class="desk-type desk-hot">Hot Desk</span></td>
+                            <td>Budget option, basic amenities</td>
+                        </tr>
+                        <tr style="opacity: 0.5;">
+                            <td><strike>MakeOffices</strike></td>
+                            <td>CLOSED 2021</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td>Permanently closed</td>
+                        </tr>
+                        <tr style="opacity: 0.5;">
+                            <td><strike>1776 DC</strike></td>
+                            <td>CLOSED 2021</td>
+                            <td>N/A</td>
+                            <td>N/A</td>
+                            <td>Former tech incubator</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--pe-dark-gray);">
+                    * WeWork dedicated desk pricing requires direct inquiry and varies by location. Prices shown are estimates based on market averages.
+                </p>
+            </div>
+
+            <div class="card">
+                <h2>Monthly Cost Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Open Gov Hub Deep Dive Tab -->
+        <div id="opengovhub" class="tab-content">
+            <div class="card highlight-card">
+                <h2>Open Gov Hub: The Premier Choice for Policy Organizations</h2>
+                <p>Open Gov Hub is the world's first coworking space dedicated to transparency, accountability, and civic engagement. With 40+ member organizations focused on making governance more open and effective, it offers unparalleled alignment with PolicyEngine's mission.</p>
+            </div>
+
+            <div class="card">
+                <h2>Comprehensive Pricing Structure</h2>
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-number">$650</div>
+                        <div class="stat-label">Per Dedicated Desk</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$1,950</div>
+                        <div class="stat-label">Total Monthly (3 desks)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">ALL</div>
+                        <div class="stat-label">Amenities Included</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$0</div>
+                        <div class="stat-label">Hidden Costs</div>
+                    </div>
+                </div>
+                
+                <div class="resources-section">
+                    <h3>Official Open Gov Hub Resources</h3>
+                    <p>Important materials from Open Gov Hub (not easily accessible on their main website):</p>
+                    <a href="https://opengovhub.my.canva.site/dedicated-desk-factsheet" class="resource-link" target="_blank">📋 Dedicated Desk Factsheet</a>
+                    <a href="https://www.canva.com/design/DAFnNrazBgY/-irzQO1Pd3ktIc6y6pYpKQ/view" class="resource-link" target="_blank">📊 Full Presentation Deck</a>
+                    <a href="https://opengovhub.org" class="resource-link" target="_blank">🌐 Main Website</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Included Facilities & Amenities</h2>
+                <div class="grid">
+                    <div class="org-card">
+                        <div class="org-name">Workspace Features</div>
+                        <ul class="feature-list">
+                            <li>Height-adjustable desks (all)</li>
+                            <li>35 collaboration spaces with AV</li>
+                            <li>Media Lab with podcasting equipment</li>
+                            <li>Wellness Room</li>
+                            <li>Two outdoor spaces</li>
+                            <li>Private phone booths</li>
+                            <li>24/7 secure access</li>
+                        </ul>
+                    </div>
+                    <div class="org-card">
+                        <div class="org-name">No Hidden Costs</div>
+                        <ul class="feature-list">
+                            <li>All meeting rooms included</li>
+                            <li>Free podcasting studio</li>
+                            <li>Unlimited printing/scanning</li>
+                            <li>Kitchen with coffee/tea</li>
+                            <li>Mail handling services</li>
+                            <li>Event space access</li>
+                            <li>All utilities and internet</li>
+                        </ul>
+                    </div>
+                    <div class="org-card">
+                        <div class="org-name">Building Excellence</div>
+                        <ul class="feature-list">
+                            <li>LEED certified (sustainability)</li>
+                            <li>FitWel certified (wellness)</li>
+                            <li>24/7 security guard</li>
+                            <li>Professional reception</li>
+                            <li>Bike storage facilities</li>
+                            <li>ADA compliant</li>
+                            <li>Premium location (13th & F)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Member Organizations & Partnership Opportunities</h2>
+                <p>Open Gov Hub hosts 40+ organizations. Here are key members with strong PolicyEngine alignment:</p>
+                
+                <div class="org-grid">
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://www.opengovpartnership.org/policy-area/open-budgets/" target="_blank">Open Government Partnership - Open Budgets</a></div>
+                        <div class="org-focus">74 countries, fiscal transparency</div>
+                        <span class="alignment-badge alignment-strong">Perfect Alignment</span>
+                        <p style="margin-top: 1rem;">Direct integration opportunity with OGP's Open Budgets initiative. PolicyEngine could become the standard tool for demonstrating budget transparency across member countries.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://developmentgateway.org/" target="_blank">Development Gateway</a></div>
+                        <div class="org-focus">Government data platforms</div>
+                        <span class="alignment-badge alignment-strong">Strong Alignment</span>
+                        <p style="margin-top: 1rem;">Builds decision-making tools for finance ministries globally. Natural partner for integrating PolicyEngine's microsimulation capabilities.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://www.brac.net/" target="_blank">BRAC</a></div>
+                        <div class="org-focus">World's largest NGO, 100M+ beneficiaries</div>
+                        <span class="alignment-badge alignment-strong">Strong Alignment</span>
+                        <p style="margin-top: 1rem;">Designs poverty alleviation programs at scale. PolicyEngine could model program impacts and government benefit interactions.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://www.open-contracting.org/" target="_blank">Open Contracting Partnership</a></div>
+                        <div class="org-focus">$13 trillion procurement transparency</div>
+                        <span class="alignment-badge alignment-strong">Strong Alignment</span>
+                        <p style="margin-top: 1rem;">Focuses on equity in public spending. PolicyEngine could analyze distributional impacts of procurement policies.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://climatejusticealliance.org/" target="_blank">Climate Justice Alliance</a></div>
+                        <div class="org-focus">Just Transition, environmental justice</div>
+                        <span class="alignment-badge alignment-strong">Strong Alignment</span>
+                        <p style="margin-top: 1rem;">Needs distributional analysis of climate policies. PolicyEngine perfect for modeling carbon tax and green subsidy impacts.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name"><a href="https://www.opendataenterprise.org/" target="_blank">Center for Open Data Enterprise</a></div>
+                        <div class="org-focus">Federal data for public good</div>
+                        <span class="alignment-badge alignment-strong">Strong Alignment</span>
+                        <p style="margin-top: 1rem;">Works with federal agencies on data use. Natural partner for policy analysis tools and government integration.</p>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 2rem;"><strong>Additional Members Include:</strong> AccountabilityLab, FeedbackLabs, PTF (Partnership for Transparency), POGO, HOT (Humanitarian OpenStreetMap), PEN America, Fair Trials, and 25+ more organizations.</p>
+            </div>
+
+            <div class="card">
+                <h2>Concrete Partnership Scenarios</h2>
+                <div class="org-grid">
+                    <div class="org-card">
+                        <div class="org-name">Daily Coffee Chats → Major Partnerships</div>
+                        <p>Physical proximity enables organic relationship building. A casual kitchen conversation with Development Gateway could lead to PolicyEngine integration in their 25+ government platforms.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name">Joint Grant Applications</div>
+                        <p>Hub organizations regularly collaborate on federal grants. PolicyEngine could join consortiums, significantly increasing funding success rates with established partners.</p>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name">Cross-Organization Events</div>
+                        <p>Host policy modeling workshops using Hub's event spaces. Demonstrate PolicyEngine to all 40+ organizations and their government partners simultaneously.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transit Tab -->
+        <div id="transit" class="tab-content">
+            <div class="card">
+                <h2>Transit Accessibility Analysis</h2>
+                <p>Comprehensive transit times from key PolicyEngine team locations to each coworking space.</p>
+            </div>
+
+            <div class="card">
+                <h2>From Clarendon, Arlington (Metro - Orange/Silver Lines)</h2>
+                <div class="transit-grid">
+                    <div class="transit-card">
+                        <h4>Open Gov Hub</h4>
+                        <div class="transit-time">20-23 min</div>
+                        <div class="transit-details">To McPherson Square (6 min walk)</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>WeWork 700 K St NW</h4>
+                        <div class="transit-time">17-20 min</div>
+                        <div class="transit-details">To McPherson Square (3 min walk)</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>Spaces DC (15th St)</h4>
+                        <div class="transit-time">17-20 min</div>
+                        <div class="transit-details">To McPherson Square (5 min walk)</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>The Yard DC</h4>
+                        <div class="transit-time">22-25 min</div>
+                        <div class="transit-details">Transfer at L'Enfant to Blue/Orange</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>WeWork 200 Mass Ave</h4>
+                        <div class="transit-time">23-26 min</div>
+                        <div class="transit-details">To Metro Center + Red Line</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>WeWork 80 M St SE</h4>
+                        <div class="transit-time">25-30 min</div>
+                        <div class="transit-details">Transfer at L'Enfant to Green</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>From 3rd & K Street NW (Bicycle)</h2>
+                <div class="transit-grid">
+                    <div class="transit-card">
+                        <h4>WeWork 700 K St NW</h4>
+                        <div class="transit-time">2-4 min</div>
+                        <div class="transit-details">Direct route on K Street bike lane</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>Open Gov Hub</h4>
+                        <div class="transit-time">8-10 min</div>
+                        <div class="transit-details">Via Pennsylvania Ave bike lane</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>Spaces DC (15th St)</h4>
+                        <div class="transit-time">10-12 min</div>
+                        <div class="transit-details">Via 15th St protected lane</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>WeWork 200 Mass Ave</h4>
+                        <div class="transit-time">8-10 min</div>
+                        <div class="transit-details">Via F Street to Union Station</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>The Yard DC</h4>
+                        <div class="transit-time">10-12 min</div>
+                        <div class="transit-details">Via Penn Ave to Capitol Hill</div>
+                    </div>
+                    <div class="transit-card">
+                        <h4>WeWork 80 M St SE</h4>
+                        <div class="transit-time">12-15 min</div>
+                        <div class="transit-details">Via M Street to Navy Yard</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Key Transit Insights</h2>
+                <div class="grid">
+                    <div>
+                        <h3>Best Metro Access from Arlington</h3>
+                        <ul class="feature-list">
+                            <li>Downtown locations (17-20 min average)</li>
+                            <li>Direct Orange/Silver Line preferred</li>
+                            <li>Avoid locations requiring transfers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Bicycle Infrastructure</h3>
+                        <ul class="feature-list">
+                            <li>All locations under 15 min by bike from 3rd & K</li>
+                            <li>Protected bike lanes to most spaces</li>
+                            <li>Capital Bikeshare stations at all locations</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Federal Agency Proximity</h3>
+                        <ul class="feature-list">
+                            <li>Open Gov Hub: 10 min to Treasury, Commerce</li>
+                            <li>Spaces DC: Across from White House</li>
+                            <li>The Yard: Walking distance to Capitol</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Costs Tab -->
+        <div id="extras" class="tab-content">
+            <div class="card highlight-card">
+                <h2>The Hidden Costs of Coworking</h2>
+                <p>Many coworking spaces advertise attractive base prices but charge significant fees for essential services. Here's what's actually included vs. extra at each location.</p>
+            </div>
+
+            <div class="card">
+                <h2>Meeting Room & Conference Space Costs</h2>
+                <table class="extras-table">
+                    <thead>
+                        <tr>
+                            <th>Space</th>
+                            <th>Meeting Rooms</th>
+                            <th>Typical Extra Cost</th>
+                            <th>Monthly Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Open Gov Hub</strong></td>
+                            <td class="included">✓ All 35 rooms included</td>
+                            <td class="included">$0</td>
+                            <td class="included">$0</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork</td>
+                            <td>2 credits/month included</td>
+                            <td class="extra-cost">$50-150/hour after credits</td>
+                            <td class="extra-cost">+$200-500/month</td>
+                        </tr>
+                        <tr>
+                            <td>The Yard DC</td>
+                            <td>4 hours/month included</td>
+                            <td class="extra-cost">$40-75/hour after</td>
+                            <td class="extra-cost">+$160-300/month</td>
+                        </tr>
+                        <tr>
+                            <td>Spaces DC</td>
+                            <td>Limited credits</td>
+                            <td class="extra-cost">$35-100/hour</td>
+                            <td class="extra-cost">+$140-400/month</td>
+                        </tr>
+                        <tr>
+                            <td>Industrious</td>
+                            <td>Some access included</td>
+                            <td class="extra-cost">$25-75/hour for premium</td>
+                            <td class="extra-cost">+$100-300/month</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Podcasting & Media Production</h2>
+                <table class="extras-table">
+                    <thead>
+                        <tr>
+                            <th>Space</th>
+                            <th>Podcasting Studio</th>
+                            <th>Equipment</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Open Gov Hub</strong></td>
+                            <td class="included">✓ Dedicated Media Lab</td>
+                            <td class="included">✓ Professional equipment included</td>
+                            <td class="included">$0</td>
+                        </tr>
+                        <tr>
+                            <td>WeWork</td>
+                            <td>Not available</td>
+                            <td>Must rent externally</td>
+                            <td class="extra-cost">$100-200/hour external</td>
+                        </tr>
+                        <tr>
+                            <td>The Yard DC</td>
+                            <td>Not available</td>
+                            <td>Must provide own</td>
+                            <td class="extra-cost">$75-150/hour external</td>
+                        </tr>
+                        <tr>
+                            <td>Others</td>
+                            <td>Generally not available</td>
+                            <td>External rental required</td>
+                            <td class="extra-cost">$100-250/hour external</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Additional Services Comparison</h2>
+                <table class="extras-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Open Gov Hub</th>
+                            <th>WeWork</th>
+                            <th>Others</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Printing/Scanning</td>
+                            <td class="included">✓ Unlimited</td>
+                            <td>Limited credits, then $0.10-0.25/page</td>
+                            <td>Usually pay-per-page</td>
+                        </tr>
+                        <tr>
+                            <td>Mail Handling</td>
+                            <td class="included">✓ Included</td>
+                            <td>✓ Basic included</td>
+                            <td>Often extra fee</td>
+                        </tr>
+                        <tr>
+                            <td>Event Space</td>
+                            <td class="included">✓ Included</td>
+                            <td class="extra-cost">$500-2000/event</td>
+                            <td class="extra-cost">$300-1500/event</td>
+                        </tr>
+                        <tr>
+                            <td>Phone Booths</td>
+                            <td class="included">✓ Unlimited</td>
+                            <td>✓ Usually included</td>
+                            <td>✓ Usually included</td>
+                        </tr>
+                        <tr>
+                            <td>Guest Passes</td>
+                            <td class="included">✓ Flexible</td>
+                            <td>Limited/month</td>
+                            <td>Often charged</td>
+                        </tr>
+                        <tr>
+                            <td>Coffee/Tea</td>
+                            <td class="included">✓ Included</td>
+                            <td>✓ Included</td>
+                            <td>Varies</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>True Cost Analysis (Monthly for 3 Desks)</h2>
+                <div style="background: var(--pe-teal-light); padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                    <h3>Scenario: PolicyEngine needs 20 hours of meeting rooms and 4 podcast recording sessions per month</h3>
+                    <table class="extras-table" style="margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Space</th>
+                                <th>Base Cost</th>
+                                <th>Meeting Rooms</th>
+                                <th>Podcasting</th>
+                                <th>Other Extras</th>
+                                <th>TRUE TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #e8f5e9;">
+                                <td><strong>Open Gov Hub</strong></td>
+                                <td>$1,950</td>
+                                <td class="included">$0</td>
+                                <td class="included">$0</td>
+                                <td class="included">$0</td>
+                                <td><strong class="included">$1,950</strong></td>
+                            </tr>
+                            <tr>
+                                <td>WeWork (avg)</td>
+                                <td>$1,200</td>
+                                <td class="extra-cost">+$350</td>
+                                <td class="extra-cost">+$600</td>
+                                <td class="extra-cost">+$50</td>
+                                <td><strong class="extra-cost">$2,200</strong></td>
+                            </tr>
+                            <tr>
+                                <td>The Yard DC</td>
+                                <td>$1,485</td>
+                                <td class="extra-cost">+$250</td>
+                                <td class="extra-cost">+$400</td>
+                                <td class="extra-cost">+$30</td>
+                                <td><strong class="extra-cost">$2,165</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Spaces DC</td>
+                                <td>$1,050</td>
+                                <td class="extra-cost">+$300</td>
+                                <td class="extra-cost">+$600</td>
+                                <td class="extra-cost">+$40</td>
+                                <td><strong class="extra-cost">$1,990</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p style="margin-top: 2rem; font-size: 1.1rem; padding: 1rem; background: var(--pe-blue-light); border-radius: 8px;">
+                    <strong>Key Finding:</strong> When accounting for realistic usage of meeting rooms and media facilities, Open Gov Hub becomes the most cost-effective option despite having the highest base price.
+                </p>
+            </div>
+        </div>
+
+        <!-- Recommendation Tab -->
+        <div id="recommendation" class="tab-content">
+            <div class="card highlight-card">
+                <h2>Executive Recommendation</h2>
+                <h3 style="color: var(--pe-teal-pressed); font-size: 1.5rem;">Primary Choice: Open Gov Hub</h3>
+                <p style="font-size: 1.1rem; margin: 1rem 0;">Despite the highest base price at $1,950/month, Open Gov Hub provides exceptional value through mission alignment, zero hidden costs, and unparalleled partnership opportunities.</p>
+                
+                <div class="grid">
+                    <div class="stat-card">
+                        <div class="stat-number">70%</div>
+                        <div class="stat-label">Org Alignment</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$0</div>
+                        <div class="stat-label">Hidden Costs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Partners</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">10x</div>
+                        <div class="stat-label">ROI Potential</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Comparative Value Analysis</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Open Gov Hub</th>
+                            <th>WeWork</th>
+                            <th>The Yard DC</th>
+                            <th>Budget Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>True Monthly Cost</strong></td>
+                            <td class="included">$1,950</td>
+                            <td>$2,200+</td>
+                            <td>$2,165+</td>
+                            <td>$300-600</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mission Alignment</strong></td>
+                            <td class="included">Perfect</td>
+                            <td>None</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Partnership Potential</strong></td>
+                            <td class="included">Very High</td>
+                            <td>Low</td>
+                            <td>Low</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Meeting Rooms</strong></td>
+                            <td class="included">Unlimited</td>
+                            <td>Limited</td>
+                            <td>Limited</td>
+                            <td>Pay-per-use</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Media Production</strong></td>
+                            <td class="included">Full studio</td>
+                            <td>None</td>
+                            <td>None</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transit (Clarendon)</strong></td>
+                            <td>20-23 min</td>
+                            <td>17-30 min</td>
+                            <td>22-25 min</td>
+                            <td>Varies</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bike (3rd & K)</strong></td>
+                            <td>8-10 min</td>
+                            <td>2-15 min</td>
+                            <td>10-12 min</td>
+                            <td>Varies</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>ROI Justification</h2>
+                
+                <div class="resources-section">
+                    <h3>Annual Investment: $23,400</h3>
+                    
+                    <h4 style="margin-top: 1.5rem;">Conservative ROI Scenarios:</h4>
+                    <ul class="feature-list">
+                        <li><strong>ONE</strong> partnership with Hub member → $50K+ in joint grants</li>
+                        <li><strong>ONE</strong> government contract via OGP connection → $100K+</li>
+                        <li><strong>Integration</strong> with Development Gateway platforms → Reach 25+ governments</li>
+                        <li><strong>Time saved</strong> on partnership development → 200+ hours/year</li>
+                        <li><strong>Media production</strong> savings → $10K+/year vs external studios</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem; padding: 1rem; background: var(--pe-white); border-radius: 8px; border: 2px solid var(--pe-teal-accent);">
+                        <strong>Bottom Line:</strong> The relationships and opportunities available at Open Gov Hub could generate 10-20x return on the additional cost compared to generic coworking spaces.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Alternative Recommendations</h2>
+                
+                <div class="org-grid">
+                    <div class="org-card">
+                        <div class="org-name">If Budget Is Critical: Cove</div>
+                        <div class="org-focus">$300-600/month (hot desks only)</div>
+                        <h4>Pros:</h4>
+                        <ul class="feature-list">
+                            <li>Saves $1,350-1,650/month</li>
+                            <li>Multiple Capitol Hill locations</li>
+                            <li>Minimal commitment</li>
+                        </ul>
+                        <h4>Cons:</h4>
+                        <ul class="feature-list">
+                            <li>No dedicated desks</li>
+                            <li>No community or networking</li>
+                            <li>Pay extra for everything</li>
+                            <li>Not professional for meetings</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="org-card">
+                        <div class="org-name">If Location Is Priority: WeWork 700 K St</div>
+                        <div class="org-focus">~$1,200/month base (+ extras)</div>
+                        <h4>Pros:</h4>
+                        <ul class="feature-list">
+                            <li>2-4 min bike from 3rd & K</li>
+                            <li>17 min Metro from Clarendon</li>
+                            <li>K Street business district</li>
+                        </ul>
+                        <h4>Cons:</h4>
+                        <ul class="feature-list">
+                            <li>No mission alignment</li>
+                            <li>Hidden costs add up quickly</li>
+                            <li>Generic business environment</li>
+                            <li>No media facilities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Implementation Timeline</h2>
+                
+                <div style="background: linear-gradient(to right, var(--pe-teal-light), var(--pe-white)); padding: 2rem; border-radius: 8px;">
+                    <h3>Month 1: Onboarding & Setup</h3>
+                    <ul class="feature-list">
+                        <li>Tour Open Gov Hub and meet current members</li>
+                        <li>Sign lease and set up dedicated desks</li>
+                        <li>Schedule intro meetings with all 40+ organizations</li>
+                        <li>Attend first community events</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 1.5rem;">Month 2-3: Partnership Development</h3>
+                    <ul class="feature-list">
+                        <li>Deep dive with OGP on Open Budgets initiative</li>
+                        <li>Explore Development Gateway integration</li>
+                        <li>Identify 5 priority partnerships</li>
+                        <li>Begin collaborative project planning</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 1.5rem;">Month 4-6: Execution & Growth</h3>
+                    <ul class="feature-list">
+                        <li>Launch first joint project</li>
+                        <li>Host PolicyEngine workshop for Hub members</li>
+                        <li>Submit collaborative grant applications</li>
+                        <li>Measure and report partnership value</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Final Recommendation</h2>
+                <div style="background: var(--pe-blue); color: var(--pe-white); padding: 2rem; border-radius: 8px; text-align: center;">
+                    <h3 style="color: var(--pe-white); margin-bottom: 1rem; font-size: 1.8rem;">✓ Proceed with Open Gov Hub</h3>
+                    <p style="font-size: 1.2rem; line-height: 1.8;">
+                        The strategic value of joining a mission-aligned community with 40+ potential partners far outweighs the cost difference. This is an investment in PolicyEngine's growth, impact, and ability to influence policy at scale—not just an office expense.
+                    </p>
+                    
+                    <div style="margin-top: 2rem;">
+                        <a href="https://opengovhub.my.canva.site/dedicated-desk-factsheet" class="resource-link" style="background: var(--pe-white); color: var(--pe-blue); font-weight: bold; padding: 1rem 2rem; margin: 0.5rem;" target="_blank">View Open Gov Hub Details →</a>
+                        <a href="https://www.canva.com/design/DAFnNrazBgY/-irzQO1Pd3ktIc6y6pYpKQ/view" class="resource-link" style="background: var(--pe-white); color: var(--pe-blue); font-weight: bold; padding: 1rem 2rem; margin: 0.5rem;" target="_blank">Full Presentation →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Reinitialize charts if switching to comparison tab
+            if (tabName === 'comparison' && !window.chartInitialized) {
+                initPriceChart();
+                window.chartInitialized = true;
+            }
+        }
+
+        // Initialize map
+        const map = L.map('map').setView([38.9072, -77.0369], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Custom icons
+        const recommendedIcon = L.divIcon({
+            html: '<div style="background: #39C6C0; color: white; padding: 8px; border-radius: 50%; font-weight: bold; text-align: center; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">★</div>',
+            iconSize: [30, 30],
+            className: 'custom-div-icon'
+        });
+
+        const regularIcon = L.divIcon({
+            html: '<div style="background: #2C6496; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">●</div>',
+            iconSize: [25, 25],
+            className: 'custom-div-icon'
+        });
+
+        // Add markers for coworking spaces
+        const locations = [
+            {
+                name: "Open Gov Hub",
+                lat: 38.9047,
+                lng: -77.0322,
+                price: "$1,950/mo (all inclusive)",
+                recommended: true,
+                description: "40+ mission-aligned organizations"
+            },
+            {
+                name: "The Yard DC",
+                lat: 38.8816,
+                lng: -76.9969,
+                price: "$1,485/mo",
+                recommended: true,
+                description: "Capitol Hill, tech-enabled"
+            },
+            {
+                name: "WeWork 80 M St SE",
+                lat: 38.8766,
+                lng: -77.0059,
+                price: "~$1,200/mo",
+                recommended: false,
+                description: "Navy Yard, outdoor space"
+            },
+            {
+                name: "WeWork 700 K St NW",
+                lat: 38.9022,
+                lng: -77.0211,
+                price: "~$1,200/mo",
+                recommended: false,
+                description: "K Street business district"
+            },
+            {
+                name: "WeWork 200 Mass Ave NW",
+                lat: 38.8977,
+                lng: -77.0091,
+                price: "~$1,200/mo",
+                recommended: false,
+                description: "Near Union Station"
+            },
+            {
+                name: "Spaces DC",
+                lat: 38.9005,
+                lng: -77.0339,
+                price: "$900-1,200/mo",
+                recommended: false,
+                description: "Near White House"
+            }
+        ];
+
+        locations.forEach(location => {
+            const marker = L.marker(
+                [location.lat, location.lng],
+                { icon: location.recommended ? recommendedIcon : regularIcon }
+            ).addTo(map);
+            
+            marker.bindPopup(`
+                <strong>${location.name}</strong><br>
+                ${location.price}<br>
+                <em>${location.description}</em>
+            `);
+        });
+
+        // Add reference points
+        L.marker([38.8899, -77.0091])
+            .addTo(map)
+            .bindPopup("<strong>U.S. Capitol</strong>");
+            
+        L.marker([38.8977, -77.0365])
+            .addTo(map)
+            .bindPopup("<strong>White House</strong>");
+            
+        // Add Clarendon marker
+        L.marker([38.8867, -77.0954])
+            .addTo(map)
+            .bindPopup("<strong>Clarendon Metro</strong><br>Team member location");
+            
+        // Add 3rd & K NW marker
+        L.marker([38.9024, -77.0156])
+            .addTo(map)
+            .bindPopup("<strong>3rd & K Street NW</strong><br>Team member location");
+
+        // Price comparison chart
+        function initPriceChart() {
+            const ctx = document.getElementById('priceChart');
+            if (ctx) {
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Cove (Hot Desk)',
+                            'Industrious (Hot)',
+                            'Spaces DC',
+                            'WeWork (Various)',
+                            'The Yard DC',
+                            'Open Gov Hub*'
+                        ],
+                        datasets: [
+                            {
+                                label: 'Base Monthly Cost (3 Desks)',
+                                data: [450, 897, 1050, 1200, 1485, 1950],
+                                backgroundColor: '#D8E6F3',
+                                borderColor: '#2C6496',
+                                borderWidth: 2
+                            },
+                            {
+                                label: 'True Cost with Extras',
+                                data: [650, 1200, 1990, 2200, 2165, 1950],
+                                backgroundColor: '#39C6C0',
+                                borderColor: '#227773',
+                                borderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': $' + context.parsed.y + '/month';
+                                    }
+                                }
+                            },
+                            annotation: {
+                                annotations: {
+                                    line1: {
+                                        type: 'line',
+                                        yMin: 1950,
+                                        yMax: 1950,
+                                        borderColor: 'rgb(255, 99, 132)',
+                                        borderWidth: 2,
+                                        label: {
+                                            content: 'Open Gov Hub includes all extras',
+                                            enabled: true,
+                                            position: 'end'
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
