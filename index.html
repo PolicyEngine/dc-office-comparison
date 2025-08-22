@@ -643,7 +643,7 @@
                             <td>1100 13th St NW</td>
                             <td><span class="price-badge price-high" title="$669 per desk × 3 desks">$2,007</span></td>
                             <td><span class="desk-type desk-dedicated">Dedicated</span></td>
-                            <td>Single Location</td>
+                            <td>Global Network</td>
                             <td><span title="Strong presence of government tech, civic tech, and open data organizations">⭐⭐⭐⭐</span></td>
                             <td><span title="Primary focus on policy research, advocacy, and government transparency. Home to 40+ organizations working on governance.">⭐⭐⭐⭐⭐</span></td>
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1100+13th+St+NW,+Washington,+DC+20005" target="_blank" class="transit-link" title="Orange/Silver to McPherson Square, 6 min walk">23 min</a></td>
@@ -733,6 +733,18 @@
                             <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Transfer at L'Enfant Plaza to Blue/Orange">25 min</a></td>
                             <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/700+Pennsylvania+Ave+SE,+Washington,+DC+20003" target="_blank" class="transit-link" title="Via Pennsylvania Ave bike lane">12 min</a></td>
                             <td>Capitol Hill, tech-enabled</td>
+                        </tr>
+                        <tr>
+                            <td><strong><a href="https://venturex.com/locations/washington-dc/" target="_blank">Venture X</a></strong></td>
+                            <td>1763 Columbia Rd NW</td>
+                            <td><span class="price-badge price-mid" title="$495 per desk × 3 desks">$1,485</span></td>
+                            <td><span class="desk-type desk-dedicated">Dedicated</span></td>
+                            <td>Global Network</td>
+                            <td><span title="Designed for entrepreneurs and startups">⭐⭐⭐</span></td>
+                            <td><span title="No specific policy focus">⭐⭐</span></td>
+                            <td><a href="https://www.google.com/maps/dir/Clarendon+Metro+Station,+Arlington,+VA/1763+Columbia+Rd+NW,+Washington,+DC+20009" target="_blank" class="transit-link" title="Via Dupont Circle">25 min</a></td>
+                            <td><a href="https://www.google.com/maps/dir/3rd+St+NW+%26+K+St+NW,+Washington,+DC/1763+Columbia+Rd+NW,+Washington,+DC+20009" target="_blank" class="transit-link" title="Via Connecticut Ave">15 min</a></td>
+                            <td>24/7 access, ergonomic setup, historic 1905 building</td>
                         </tr>
                         <tr>
                             <td><a href="https://www.spacesworks.com/washington-dc/washington-dc-spaces/" target="_blank">Spaces DC</a></td>
@@ -1596,6 +1608,12 @@
             className: 'custom-div-icon'
         });
 
+        const ventureXIcon = L.divIcon({
+            html: '<div style="background: #E91E63; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 12px; font-weight: bold;">VX</div>',
+            iconSize: [28, 28],
+            className: 'custom-div-icon'
+        });
+
         const conveneIcon = L.divIcon({
             html: '<div style="background: #2C6496; color: white; padding: 8px; border-radius: 50%; text-align: center; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.4); border: 2px solid #FFD700; font-size: 11px; font-weight: bold;">CV</div>',
             iconSize: [30, 30],
@@ -1732,6 +1750,19 @@
                     features: "Near White House, premium environment",
                     techScore: "General business community",
                     website: "https://www.spacesworks.com/washington-dc/washington-dc-spaces/"
+                },
+                ventureX: {
+                    name: "Venture X",
+                    lat: 38.9253, lng: -77.0426,
+                    address: "1763 Columbia Rd NW",
+                    price: "$1,485/month (3 desks)",
+                    guestPass: "$35/day (Community Pass), $55/day (Day Desk)",
+                    deskType: "Dedicated",
+                    fromClarendon: "25 min (Metro)",
+                    fromThirdK: "15 min (Bike)",
+                    features: "24/7 access, ergonomic setup, historic 1905 building, unlimited coffee/tea",
+                    techScore: "Designed for entrepreneurs and startups",
+                    website: "https://venturex.com/locations/washington-dc/"
                 }
             };
             
@@ -1838,6 +1869,14 @@
                 .on('click', function(e) {
                     L.DomEvent.stopPropagation(e);
                     showSpaceDetails(spaceData.spaces);
+                });
+
+            // Add Venture X
+            L.marker([spaceData.ventureX.lat, spaceData.ventureX.lng], { icon: ventureXIcon })
+                .addTo(comparisonMap)
+                .on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    showSpaceDetails(spaceData.ventureX);
                 });
             
             // Add team member locations with star icons
